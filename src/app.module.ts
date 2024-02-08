@@ -14,13 +14,27 @@ import { LibraryModule } from './library/library.module';
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: configService => ({
-                uri: configService.get('mongodb.uri'),
-                auth: {
-                    username: configService.get('mongodb.username'),
-                    password: configService.get('mongodb.password'),
-                },
-            }),
+            useFactory: ConfigService => {
+                const { host, port, db, username, password } = ConfigService.get('mongodb');
+
+                if (!username) {
+                    throw new Error('MONGO_USERNAME is not defined');
+                }
+
+                if (!password) {
+                    throw new Error('MONGO_PASSWORD is not defined');
+                }
+
+                const uri = `mongodb://${host}:${port}/${db}`;
+
+                return {
+                    uri,
+                    auth: {
+                        username,
+                        password,
+                    },
+                };
+            },
         }),
         GraphQLModule.forRootAsync({
             driver: ApolloDriver,

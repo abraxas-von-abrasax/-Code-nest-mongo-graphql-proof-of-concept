@@ -16,6 +16,7 @@ type Author {
 type Book {
   _id: String!
   author: Author!
+  description: String!
   publishingDate: DateTime
   title: String!
 }

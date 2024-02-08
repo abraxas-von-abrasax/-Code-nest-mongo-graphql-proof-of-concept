@@ -19,6 +19,10 @@ export class Book {
     @Prop({ type: Types.ObjectId, ref: 'Author' })
     author: string;
 
+    @Field(() => String)
+    @Prop({ type: String, default: '<<no description>>' })
+    description: string;
+
     @Field(() => Date, { nullable: true })
     @Prop(Date)
     publishingDate?: Date;
